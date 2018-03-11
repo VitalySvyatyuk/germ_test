@@ -5,7 +5,7 @@ from .models import Vacancy
 from .serializers import VacancySerializer
 
 
-class VacancyListView(mixins.CreateModelMixin, mixins.UpdateModelMixin, generics.ListAPIView):
+class VacancyListView(mixins.DestroyModelMixin, mixins.UpdateModelMixin, generics.ListCreateAPIView):
     serializer_class = VacancySerializer
 
     def get_queryset(self):
@@ -20,8 +20,11 @@ class VacancyListView(mixins.CreateModelMixin, mixins.UpdateModelMixin, generics
             qs = qs.filter(company__name__icontains=q_company)
         return qs
 
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
