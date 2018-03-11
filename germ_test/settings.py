@@ -25,7 +25,7 @@ SECRET_KEY = '%xo^qmc^42wo)_sb4=+ql-_(@k0i8if%h_u&usbo!v+3l!z0^-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 INTERNAL_IPS = ['127.0.0.1']
 
