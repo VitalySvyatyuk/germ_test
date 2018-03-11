@@ -67,7 +67,7 @@ class Command(BaseCommand):
     @staticmethod
     def parse_description(html_description):
         html_string = html.tostring(html_description[0])
-        soup = BeautifulSoup(html_string)
+        soup = BeautifulSoup(html_string, "lxml")
         text_data = soup.findAll(text=True)
         filtered_text_data = list(filter(lambda x: x != '\n', text_data))
         return ' '.join(filtered_text_data)
