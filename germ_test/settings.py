@@ -82,10 +82,10 @@ WSGI_APPLICATION = 'germ_test.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd6ckh33oa86lcl',
-        'USER': 'tgqmqvtrgrnauf',
-        'PASSWORD': '4dc6477a64746cb45be5b39328370ea7ad700dd58e3223989b4ef71d16d55bb2',
-        'HOST': 'ec2-54-243-31-34.compute-1.amazonaws.com',
+        'NAME': 'd34lleiu9551ps',
+        'USER': 'zpxycoqvbqvemy',
+        'PASSWORD': '2f239a73031d6a547862039e34225d6b635ea000a37b881e012b2c8eae27ae2d',
+        'HOST': 'ec2-107-22-168-211.compute-1.amazonaws.com',
         'PORT': '5432',
     }
 }
