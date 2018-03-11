@@ -81,10 +81,10 @@ WSGI_APPLICATION = 'germ_test.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'recruiting',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': '127.0.0.1',
+        'NAME': 'd6ckh33oa86lcl',
+        'USER': 'tgqmqvtrgrnauf',
+        'PASSWORD': '4dc6477a64746cb45be5b39328370ea7ad700dd58e3223989b4ef71d16d55bb2',
+        'HOST': 'ec2-54-243-31-34.compute-1.amazonaws.com',
         'PORT': '5432',
     }
 }
