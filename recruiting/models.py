@@ -8,9 +8,9 @@ class Vacancy(models.Model):
     starts_at = models.CharField(max_length=200)
     ends_at = models.CharField(max_length=200)
     description = models.CharField(max_length=5000, blank=True, null=True)
-    image_list = ArrayField(models.URLField(max_length=200, blank=True))
+    image_list = ArrayField(models.CharField(max_length=300, blank=True), default=[])
     company = models.ForeignKey('Company', on_delete=models.CASCADE)
-    is_active = models.BooleanField()
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name_plural = 'vacancies'
@@ -37,7 +37,4 @@ class City(models.Model):
         verbose_name_plural = 'cities'
 
     def __str__(self):
-        return self.location
-
-    def __repr__(self):
         return self.location

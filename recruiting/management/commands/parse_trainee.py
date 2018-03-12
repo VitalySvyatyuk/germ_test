@@ -13,23 +13,12 @@ class Command(BaseCommand):
 
     BASE_URL = 'https://www.trainee.de'
     HEADERS = {'User-Agent': 'Mozilla/5.0'}
+    JOBS_QUANTITY = 20
     active_vacancies = []
 
     def handle(self, *args, **options):
         for job_ctx in self.parse_job_page():
-            location, created = City.objects.get_or_create(location=job_ctx['location'])
-            company, created = Company.objects.get_or_create(name=job_ctx['company'], location=location)
-            active_vacancy, created = Vacancy.objects.get_or_create(
-                title=job_ctx['title'],
-                starts_at=job_ctx['starts_at'],
-                ends_at=job_ctx['ends_at'],
-                description=job_ctx['description'],
-                image_list=job_ctx['image_list'],
-                company=company,
-                location=location,
-                is_active=job_ctx['is_active'])
-            if created:
-                logger.debug('New active vacancy {} is created'.format(active_vacancy))
+            active_vacancy = self.get_or_write_to_db(job_ctx)
             print(active_vacancy)
             self.active_vacancies.append(active_vacancy)
 
@@ -39,16 +28,8 @@ class Command(BaseCommand):
                 vacancy.save()
         logger.debug("Outdated vacancies are inactive now")
 
-    def get_html_tree(self, path):
-        response = requests.get(self.BASE_URL + path, headers=self.HEADERS)
-        return html.fromstring(response.content)
-
-    def get_first_20_job_links(self):
-        html_tree = self.get_html_tree('/traineestellen')
-        return html_tree.xpath('//a[@class="tr-card tr-card--link"]/@href')[:20]
-
     def parse_job_page(self):
-        for path in self.get_first_20_job_links():
+        for path in self.get_first_job_links():
             html_tree = self.get_html_tree(path)
             ctx = dict()
             ctx['title'] = html_tree.xpath('//h2[@class="tr-mrgv+ tr-md-mrgv++++"]/text()')[0]
@@ -58,11 +39,39 @@ class Command(BaseCommand):
                 .replace('\n                        ', '')
             ctx['ends_at'] = html_tree.xpath('//ul[@class="tr-list"]/li[3]/text()')[6][1:]\
                 .replace('\n                        ', '')
-            ctx['description'] = self.parse_description(html_tree.xpath('//div[contains (@class, "tr-text+")]'))
-            ctx['image_list'] = [html_tree.xpath('//img[@class="tr-stage__logo"]/@src')[0]]
+            description = html_tree.xpath('//div[contains (@class, "tr-text+")]')
+            ctx['description'] = self.parse_description(description)
+            try:
+                ctx['image_list'] = [html_tree.xpath('//img[@class="tr-stage__logo"]/@src')[0]]
+            except IndexError:
+                ctx['image_list'] = ""
             ctx['company'] = html_tree.xpath('//h1/text()')[0]
-            ctx['is_active'] = True
             yield ctx
+
+    @staticmethod
+    def get_or_write_to_db(job_ctx):
+        location, created = City.objects.get_or_create(
+            location=job_ctx['location'])
+        company, created = Company.objects.get_or_create(
+            name=job_ctx['company'],
+            location=location)
+        active_vacancy, created = Vacancy.objects.get_or_create(
+            title=job_ctx['title'],
+            starts_at=job_ctx['starts_at'],
+            ends_at=job_ctx['ends_at'],
+            description=job_ctx['description'],
+            image_list=job_ctx['image_list'],
+            company=company,
+            location=location)
+        return active_vacancy
+
+    def get_html_tree(self, path):
+        response = requests.get(self.BASE_URL + path, headers=self.HEADERS)
+        return html.fromstring(response.content)
+
+    def get_first_job_links(self):
+        html_tree = self.get_html_tree('/traineestellen')
+        return html_tree.xpath('//a[@class="tr-card tr-card--link"]/@href')[:self.JOBS_QUANTITY]
 
     @staticmethod
     def parse_description(html_description):
