@@ -49,7 +49,6 @@ def test_parse_description():
     assert '<p>' not in str_description
 
 
-@pytest.mark.django_db(transaction=False)
 def test_get_or_write_to_db():
     active_vacancy = command.get_or_write_to_db(page_context)
     assert isinstance(active_vacancy, Vacancy)

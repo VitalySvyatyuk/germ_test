@@ -7,7 +7,6 @@ from requests.auth import HTTPBasicAuth
 from recruiting.models import Vacancy
 
 URL = 'https://mysterious-springs-82115.herokuapp.com/api/vacancies/'
-
 USER = 'test_jobufo'
 PASSWORD = 'test_jobufo'
 HEADERS = {
