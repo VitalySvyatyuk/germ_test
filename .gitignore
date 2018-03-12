@@ -1,5 +1,6 @@
 .idea
 .coverage
+.pytest_cache/
 *.pyc
 local_settings.py
 staticfiles/
