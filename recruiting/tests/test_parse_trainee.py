@@ -36,7 +36,7 @@ def test_parse_job_page():
     assert '___' not in page_context['ends_at']
     assert '\n' not in page_context['ends_at']
     assert isinstance(page_context['description'], str)
-    assert isinstance(page_context['image_list'], str)
+    assert isinstance(page_context['image_list'], list)
     assert isinstance(page_context['company'], str)
     assert '\n' not in page_context['company']
 
